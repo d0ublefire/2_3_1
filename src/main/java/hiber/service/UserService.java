@@ -1,17 +1,21 @@
 package hiber.service;
 
 import hiber.model.User;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 public interface UserService {
-    void add(User user);
+    @Transactional
+    User findByUserEmail(String email);
+
+    void addUser(User user);
 
     User getUser(long id);
 
     List<User> listUsers();
 
-    void update(User user);
+    void updateUser(User user);
 
-    void remove(long id);
+    void removeUser(long id);
 }

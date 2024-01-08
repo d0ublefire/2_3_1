@@ -15,15 +15,15 @@
             <th>Email</th>
         </tr>
         </thead>
-        <tr th:each="users : ${users}">
-            <td th:utext="${users.getId()}">ID</td>
-            <td th:utext="${users.getFirstName()}">Name</td>
-            <td th:utext="${users.getLastName()}">LastName</td>
-            <td th:utext="${users.getEmail()}">Email</td>
+        <tr th:each="user : ${users}">
+            <td th:utext="${user.getId()}">ID</td>
+            <td th:utext="${user.getFirstName()}">FirstName</td>
+            <td th:utext="${user.getLastName()}">LastName</td>
+            <td th:utext="${user.getEmail()}">Email</td>
             <td>
-                <a th:href="'/updateUser?id='+${users.id}">Update</a>
+                <a th:href="'/updateUser?id='+${user.id}">Update</a>
             <td>
-                <a th:href="'/removeUser?id='+${users.id}">Delete</a>
+                <a th:href="'/removeUser?id='+${user.id}">Delete</a>
             </td>
         </tr>
     </table>

@@ -6,7 +6,7 @@
 </head>
 <body>
 <div>
-    <form th:method="POST" th:action="@{/updateUser}" th:object="${users}">
+    <form th:method="POST" th:action="@{/admin/{id}(id=${user.getId()})}" th:object="${users}">
         <input hidden="hidden" type="number" th:field="*{id}" id="idAdd" placeholder="id">
         <label for="firstNameUpdate">FirstName</label>
         <input type="text" th:field="*{firstName}" id="firstNameUpdate" placeholder="Name">
@@ -15,7 +15,17 @@
         <input type="text" th:field="*{lastName}" id="lastNameUpdate" placeholder="LastName">
 
         <label for="emailUpdate">Email</label>
-        <input type="text" th:field="*{email}" id="emailUpdate" placeholder="Age">
+        <input type="text" th:field="*{email}" id="emailUpdate" placeholder="Email">
+
+        <label for="passwordUpdate">Email</label>
+        <input type="text" th:field="*{password}" id="passwordUpdate" placeholder="Password">
+
+        <label>Role:
+            <select size="2" multiple name="roles" >
+                <option value="1">ADMIN</option>
+                <option selected="selected" value="2">USER</option>
+            </select>
+        </label>
 
         <input type="submit" value="Update User">
     </form>
