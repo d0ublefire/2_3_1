@@ -18,14 +18,15 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 @Controller
 //@RequiredArgsConstructor
 public class AdminController {
-    private UserService userService;
-    private RoleService roleService;
+    private final UserService userService;
+    private final RoleService roleService;
 
     @Autowired
     public AdminController(UserService userService, RoleService roleService) {
@@ -54,13 +55,14 @@ public class AdminController {
     }
 
     @PostMapping("/userCreate")
-    public String addUser(@ModelAttribute("users") @Validated User user, ModelMap model) {
+    public String addUser(@ModelAttribute("users") User user, ModelMap model) {
         model.addAttribute("roles", roleService.getRoles());
+//        model.addAttribute("selectedRoles", user.getRoles());
         userService.addUser(user);
-        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+//        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+//        user.setPassword(passwordEncoder.encode(user.getPassword()));
 
-        userService.updateUser(user);
+//        userService.updateUser(user);
 
         return "redirect:/users";
     }
@@ -74,11 +76,13 @@ public class AdminController {
     @GetMapping("/updateUser")
     public String getEditUserForm(Model model, @RequestParam("id") long id) {
         model.addAttribute("users", userService.getUser(id));
+        model.addAttribute("roles", roleService.getRoles());
         return "userUpdate";
     }
 
     @PostMapping("/updateUser")
-    public String updateUser(@ModelAttribute("users") User user) {
+    public String updateUser(@ModelAttribute("users") User user, Model model) {
+        model.addAttribute("roles", roleService.getRoles());
         userService.updateUser(user);
         return "redirect:/users";
     }

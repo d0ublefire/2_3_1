@@ -5,6 +5,7 @@ import hiber.dao.UserDao;
 import hiber.model.Role;
 import hiber.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,9 +35,13 @@ public class UserServiceImpl implements UserService {
    @Transactional
    @Override
    public void addUser(User user) {
+//      if (userDao.findByUserEmail(user.getEmail()) != null) {
+//         return false;
+//      }
       user.setPassword(passwordEncoder.encode(user.getPassword()));
-      user.setRoles(roleDao.getRoles());
+      user.setRoles(user.getRoles());
       userDao.addUser(user);
+//      return true;
    }
 
    @Transactional
@@ -48,6 +53,12 @@ public class UserServiceImpl implements UserService {
    @Transactional
    @Override
    public void updateUser(User user) {
+      if(user.getPassword().isEmpty()) {
+         user.setPassword(getUser(user.getId()).getPassword());
+      } else {
+         user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
+      }
+      user.setRoles(user.getRoles());
       userDao.update(user);
    }
 

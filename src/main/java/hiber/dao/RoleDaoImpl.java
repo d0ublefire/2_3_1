@@ -10,6 +10,7 @@ import java.util.List;
 
 @Repository
 public class RoleDaoImpl implements RoleDao {
+
     @PersistenceContext
     private EntityManager entityManager;
 
@@ -21,4 +22,9 @@ public class RoleDaoImpl implements RoleDao {
     public void addRole(Role role) {
         entityManager.persist(role);
     }
+
+//    @Override
+//    public List<Role> getRoleByName() {
+//        return entityManager.createQuery("from Role", Role.class).getResultList();;
+//    }
 }

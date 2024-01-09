@@ -20,11 +20,21 @@
     <input type="text" th:field="*{password}" id="password"/>
 
     <label>Role:
-        <select size="2" multiple name="roles" th:field="*{roles}" >
-            <option value="1">USER</option>
-            <option selected="selected" value="2">ADMIN</option>
+<!--        <select size="2" name="role"  >-->
+
+<!--            <option value="ROLE_ADMIN">ADMIN</option>-->
+<!--            <option selected="selected" value="ROLE_USER">USER</option>-->
+<!--        </select>-->
+<!--        th:value="${role.getId()}"-->
+        <select name="role" multiple size="2">
+            <option th:each="role : ${roles}"
+
+                    th:text="${role.getRole()}">
+            </option>
         </select>
     </label>
+
+
 
     <input type="submit" value="Save"/>
 
