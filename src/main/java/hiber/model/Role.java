@@ -18,6 +18,11 @@ public class Role implements GrantedAuthority {
     @Column(name = "role")
     private String role;
 
+
+    @ManyToMany(mappedBy = "roles")
+    private Collection<User> user;
+
+
     public Role() {
     }
 
@@ -33,9 +38,6 @@ public class Role implements GrantedAuthority {
     }
 
 
-
-    @ManyToMany(mappedBy = "roles")
-    private Collection<User> user;
 
     public Long getId() {
         return id;

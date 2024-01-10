@@ -94,6 +94,15 @@ public class User implements UserDetails {
    }
 
    public void setRoles(Collection<Role> roles) {
+//      public void setRoles(Collection<Role> roles) {
+//         if (this.roles == null) {
+//            this.roles = new HashSet<>();
+//         }
+//         this.roles.clear(); // Очищаем текущие роли перед добавлением новых
+//         if (roles != null) {
+//            this.roles.addAll(roles); // Добавляем новые роли
+//         }
+//      }
       this.roles = roles;
    }
 
