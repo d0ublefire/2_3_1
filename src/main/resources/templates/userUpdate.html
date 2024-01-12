@@ -12,14 +12,14 @@
           th:object="${users}">
 
         <input hidden="hidden" type="number" th:field="*{id}" id="idAdd" placeholder="id">
+        <label for="usernameUpdate">Email</label>
+        <input type="text" th:field="*{username}" id="usernameUpdate" placeholder="Name">
+
         <label for="firstNameUpdate">FirstName</label>
-        <input type="text" th:field="*{firstName}" id="firstNameUpdate" placeholder="Name">
+        <input type="text" th:field="*{firstName}" id="firstNameUpdate" placeholder="LastName">
 
         <label for="lastNameUpdate">LastName</label>
-        <input type="text" th:field="*{lastName}" id="lastNameUpdate" placeholder="LastName">
-
-        <label for="emailUpdate">Email</label>
-        <input type="text" th:field="*{email}" id="emailUpdate" placeholder="Email">
+        <input type="text" th:field="*{lastName}" id="lastNameUpdate" placeholder="Email">
 
         <label for="passwordUpdate">Password</label>
         <input type="password" th:field="*{password}" id="passwordUpdate" placeholder="Password">
@@ -31,8 +31,8 @@
         <label>Role:
             <select name="role" multiple size="2">
                 <option th:each="role : ${roles}"
-                        th:value="${role.getId()}"
-                        th:text="${role.getRole()}">
+
+                        th:text="${role.getName()}">
                 </option>
             </select>
         </label>

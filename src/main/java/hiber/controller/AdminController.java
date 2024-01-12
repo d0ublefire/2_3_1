@@ -21,6 +21,7 @@ import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 @Controller
 //@RequiredArgsConstructor
@@ -37,28 +38,36 @@ public class AdminController {
 
     @GetMapping ("/users")
     public String getAllUsers(ModelMap model, Principal principal) {
-            User user = userService.findByUserEmail(principal.getName());
-            model.addAttribute("user", user);
-            List<User> listOfUsers = userService.listUsers();
-            model.addAttribute("users", listOfUsers);
-            System.out.println(listOfUsers);
-            return "users";
+        List<User> users = userService.findAllUsers();
+        Long userId = userService.getUserIdByEmail(principal.getName());
+        User user = userService.findUserById(userId);
+        model.addAttribute("user", user);
+//        model.addAttribute("users", principal.getName());
+//        model.addAttribute("role",userRole.getAllRolesString());
+//            User user = userService.saveUser(principal.getName());
+//            model.addAttribute("user", user);
+//            List<User> listOfUsers = userService.listUsers();
+        model.addAttribute("users", users);
+//            System.out.println(listOfUsers);
+        return "users";
     }
 
     @GetMapping("/new")
     public String createUserForm(ModelMap model) {
         User user = new User();
         model.addAttribute("users", user);
-        Collection<Role> roles = roleService.getRoles();
+        Set<Role> roles = roleService.getRoles();
         model.addAttribute("roles", roles);
         return "userCreate";
     }
 
     @PostMapping("/userCreate")
-    public String addUser(@ModelAttribute("users") User user, ModelMap model) {
-        model.addAttribute("roles", roleService.getRoles());
+    public String addUser(@ModelAttribute("user") User user, @RequestParam(value = "role", required = false) String[] roles) {
+
+        userService.getUserAndRoles(user, roles);
 //        model.addAttribute("selectedRoles", user.getRoles());
-        userService.addUser(user);
+        userService.getNotNullRole(user);
+        userService.saveUser(user);
 //        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 //        user.setPassword(passwordEncoder.encode(user.getPassword()));
 
@@ -68,21 +77,22 @@ public class AdminController {
     }
 
     @GetMapping("/removeUser")
-    public String removeUser(@RequestParam("id") long id) {
-        userService.removeUser(id);
+    public String removeUser(@RequestParam("id") Long id) {
+        userService.deleteUserById(id);
         return "redirect:/users";
     }
 
     @GetMapping("/updateUser")
-    public String getEditUserForm(Model model, @RequestParam("id") long id) {
-        model.addAttribute("users", userService.getUser(id));
-        model.addAttribute("roles", roleService.getRoles());
+    public String getEditUserForm(Model model, @RequestParam("id") Long id) {
+        model.addAttribute("users", userService.findUserById(id));
+        Set<Role> roles = roleService.getRoles();
+        model.addAttribute("roles", roles);
         return "userUpdate";
     }
 
     @PostMapping("/updateUser")
-    public String updateUser(@ModelAttribute("users") User user, Model model) {
-        model.addAttribute("roles", roleService.getRoles());
+    public String updateUser(@ModelAttribute("user") User user, @RequestParam(value = "role", required = false) String[] roles) {
+        userService.getUserAndRoles(user, roles);
         userService.updateUser(user);
         return "redirect:/users";
     }

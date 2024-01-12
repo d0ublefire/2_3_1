@@ -1,38 +1,31 @@
 package hiber.service;
 
-import hiber.dao.RoleDao;
+
 import hiber.model.Role;
-import org.springframework.beans.factory.annotation.Autowired;
+import hiber.repository.RoleRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Service
+@RequiredArgsConstructor
 public class RoleServiceImpl implements RoleService{
 
-    private final RoleDao roleDao;
+    private final RoleRepository roleRepository;
 
-    @Autowired
-    public RoleServiceImpl(RoleDao roleDao) {
-        this.roleDao = roleDao;
+    @Override
+    public Set<Role> getRoles() {
+        return new HashSet<>(roleRepository.findAll());
     }
 
     @Override
-    public void addUser(Role role) {
-        roleDao.addRole(role);
-    }
-
-    @Override
-    public List<Role> getRoles() {
-        return roleDao.getRoles();
-    }
-
-//    public List<Role> getRoleByName(){
-//        return roleDao.getRoleByName()
-//    }
-
-    @Override
-    public Role getRolesByEmail(String email) {
-        return null;
+    public Set<Role> findRoleByRole(String[] stringsRoles) {
+        Set<Role> setRole = new HashSet<>();
+        for(String role : stringsRoles) {
+            setRole.add(roleRepository.findRoleByName(role));
+        }
+        return setRole;
     }
 }

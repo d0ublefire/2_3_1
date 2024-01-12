@@ -10,16 +10,16 @@
         <thead>
         <tr>
             <th>Id</th>
+            <th>Email</th>
             <th>FirstName</th>
             <th>LastName</th>
-            <th>Email</th>
         </tr>
         </thead>
         <tr th:each="user : ${users}">
             <td th:utext="${user.getId()}">ID</td>
-            <td th:utext="${user.getFirstName()}">FirstName</td>
-            <td th:utext="${user.getLastName()}">LastName</td>
-            <td th:utext="${user.getEmail()}">Email</td>
+            <td th:utext="${user.getUsername()}">Email</td>
+            <td th:utext="${user.getLastName()}">FirstName</td>
+            <td th:utext="${user.getFirstName()}">LastName</td>
             <td>
                 <a th:href="'/updateUser?id='+${user.id}">Update</a>
             <td>

@@ -15,9 +15,9 @@
     </thead>
     <tbody>
     <tr th:object="${user}">
-        <td><h1 th:text="${user.getFirstName()} "></h1></td>
+        <td><h1 th:text="${user.getUsername()} "></h1></td>
         <td><h1 th:text="${user.getLastName()}"></h1></td>
-        <td><h1 th:text="${user.getEmail()}"></h1></td>
+        <td><h1 th:text="${user.getFirstName()}"></h1></td>
     </tr>
     </tbody>
 </table>

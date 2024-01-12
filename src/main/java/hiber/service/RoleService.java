@@ -3,11 +3,14 @@ package hiber.service;
 import hiber.model.Role;
 import hiber.model.User;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 public interface RoleService {
-    void addUser(Role role);
-    List<Role> getRoles();
 
-    Role getRolesByEmail(String email) ;
+    Set<Role> getRoles();
+
+
+    Set<Role> findRoleByRole(String[] strings);
 }

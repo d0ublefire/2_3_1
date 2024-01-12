@@ -1,88 +1,126 @@
 package hiber.service;
 
-import hiber.dao.RoleDao;
-import hiber.dao.UserDao;
+
 import hiber.model.Role;
 import hiber.model.User;
-import org.springframework.beans.factory.annotation.Autowired;
+import hiber.repository.RoleRepository;
+import hiber.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+
 import javax.annotation.PostConstruct;
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
+
 
 @Service
-public class UserServiceImpl implements UserService {
+@RequiredArgsConstructor
+public class UserServiceImpl implements UserService, UserDetailsService {
 
-   private final UserDao userDao;
-   private final RoleDao roleDao;
-   private final PasswordEncoder passwordEncoder;
-   @Autowired
-   public UserServiceImpl(UserDao userDao, RoleDao roleDao, PasswordEncoder passwordEncoder) {
-       this.userDao = userDao;
-       this.roleDao = roleDao;
-       this.passwordEncoder = passwordEncoder;
+   private final UserRepository userRepository;
+   private final RoleRepository roleRepository;
+   private final RoleService roleService;
+
+   @Override
+   @Transactional
+   public void saveUser(User user) {
+      User userDB = userRepository.findUserByUsername(user.getUsername());
+      if (userDB != null) {
+         return;
+      }
+      if (user.getFirstName().equals("") | user.getPassword().equals("")) {
+         return;
+      }
+      user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
+      userRepository.save(user);
    }
 
-
-   @Transactional
    @Override
-   public User findByUserEmail(String email){
-      return userDao.findByUserEmail(email);
-   }
-   @Transactional
-   @Override
-   public void addUser(User user) {
-//      if (userDao.findByUserEmail(user.getEmail()) != null) {
-//         return false;
-//      }
-      user.setPassword(passwordEncoder.encode(user.getPassword()));
-      user.setRoles(user.getRoles());
-      userDao.addUser(user);
-//      return true;
+   public User findUserById(Long id) {
+      return userRepository.getById(id);
    }
 
-   @Transactional
    @Override
-   public User getUser(long id) {
-      return userDao.getUser(id);
+   public List<User> findAllUsers() {
+      return userRepository.findAll();
    }
 
-   @Transactional
    @Override
+   @Transactional
    public void updateUser(User user) {
       if(user.getPassword().isEmpty()) {
-         user.setPassword(getUser(user.getId()).getPassword());
-      } else {
-         user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
+         user.setPassword(findUserById(user.getId()).getPassword());
       }
-      user.setRoles(user.getRoles());
-      userDao.update(user);
+      userRepository.save(user);
    }
 
+   @Override
    @Transactional
-   @Override
-   public void removeUser(long id) {
-      userDao.remove(id);
+   public void deleteUserById(Long id) {
+      userRepository.deleteById(id);
    }
 
-   @Transactional (readOnly = true)
    @Override
-   public List<User> listUsers() {
-      return userDao.listUsers();
+   public UserDetails loadUserByEmail(String email) throws UsernameNotFoundException {
+      UserDetails userDetails = userRepository.findUserByUsername(email);
+      if (userDetails == null) {
+         throw new UsernameNotFoundException("Ты кого искал по почте " + email +" не нашел и не найдешь...");
+      }
+      return userDetails;
+   }
+
+   @Override
+   public Long getUserIdByEmail(String email) {
+      return userRepository.findUserByUsername(email).getId();
+   }
+
+   @Override
+   public void getUserAndRoles(User user, String[] roles) {
+      user.setRoles(roleService.findRoleByRole(Objects.requireNonNullElseGet(roles,() -> new String[] {"ROLE_USER"})));
+
+   }
+
+   @Override
+   public void getNotNullRole(User user) {
+      if(user.getRoles() == null) {
+         user.setRoles(Collections.singleton(new Role(2L)));
+      }
+   }
+
+   @Override
+   public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+      UserDetails userDetails = userRepository.findUserByUsername(email);
+      if (userDetails == null) {
+         throw new UsernameNotFoundException("Ты кого искал по почте " + email +" не нашел и не найдешь...");
+      }
+      return  userDetails;
+   }
+
+   public void saveUserTest(User user) {
+      User userFromDB = userRepository.findUserByUsername(user.getUsername());
+      if (userFromDB != null) {
+         return;
+      }
+      user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
+      userRepository.save(user);
    }
 
 
-//   @PostConstruct
-//   public void addTestUsers() {
-//      roleDao.addRole(new Role(1L, "ROLE_ADMIN"));
-//      roleDao.addRole(new Role(2L, "ROLE_USER"));
-//      User newAdmin = new User("admin", "admin", "admin@admin", roleDao.getRoles());
-//      addUser(newAdmin);
-//      User newUser = new User("user", "user", "user@user", roleDao.getRoles());
-//      addUser(newUser);
-//   }
+   @PostConstruct
+   public void addTestUsers() {
+      roleRepository.save(new Role(1L, "ROLE_ADMIN"));
+      roleRepository.save(new Role(2L, "ROLE_USER"));
+      User newAdmin = new User("admin", "admin", "admin", "admin" , roleService.findRoleByRole(new String[]{"ROLE_ADMIN"}));
+      saveUserTest(newAdmin);
+      User newUser = new User("user", "user", "user", "user", roleService.findRoleByRole(new String[]{"ROLE_USER"}));
+      saveUserTest(newUser);
+   }
 
 }
