@@ -4,22 +4,16 @@ import hiber.model.Role;
 import hiber.model.User;
 import hiber.service.RoleService;
 import hiber.service.UserService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.security.Principal;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -42,13 +36,7 @@ public class AdminController {
         Long userId = userService.getUserIdByEmail(principal.getName());
         User user = userService.findUserById(userId);
         model.addAttribute("user", user);
-//        model.addAttribute("users", principal.getName());
-//        model.addAttribute("role",userRole.getAllRolesString());
-//            User user = userService.saveUser(principal.getName());
-//            model.addAttribute("user", user);
-//            List<User> listOfUsers = userService.listUsers();
         model.addAttribute("users", users);
-//            System.out.println(listOfUsers);
         return "users";
     }
 
@@ -65,13 +53,8 @@ public class AdminController {
     public String addUser(@ModelAttribute("user") User user, @RequestParam(value = "role", required = false) String[] roles) {
 
         userService.getUserAndRoles(user, roles);
-//        model.addAttribute("selectedRoles", user.getRoles());
         userService.getNotNullRole(user);
         userService.saveUser(user);
-//        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-//        user.setPassword(passwordEncoder.encode(user.getPassword()));
-
-//        userService.updateUser(user);
 
         return "redirect:/users";
     }
