@@ -8,7 +8,9 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
 
@@ -81,20 +83,34 @@ public class User implements UserDetails {
       return true;
    }
 
-   public String getAllRolesString() {
-      StringBuilder allRolesString = new StringBuilder(new String());
-      String roleUser = "";
-      for (Role role: roles) {
-         roleUser = allRolesString
-                 .append(role.toString())
-                 .append(" ")
-                 .toString()
-                 .split(" ")[1]
-                 .replace("name=","")
-                 .replace(",","");
-      }
+//   public String getAllRolesString() {
+//      StringBuilder allRolesString = new StringBuilder(new String());
+//      String roleUser = "";
+//      for (Role role: getRoles()) {
+//         roleUser = allRolesString
+//                 .append(role.toString())
+//                 .append(" ")
+//                 .toString()
+//                 .split(" ")[1]
+//                 .replace("name=","")
+//                 .replace(",","")
+//                 .replace("ROLE_", "");
+//      }
+//
+//      return roleUser;
+//   }
 
-      return roleUser;
+   public String getAllRolesString() {
+      List<String> roleNames = new ArrayList<>();
+      for (Role role : getRoles()) {
+         String roleName = role.toString()
+                 .split(" ")[1]
+                 .replace("name=", "")
+                 .replace(",", "")
+                 .replace("ROLE_", "");
+         roleNames.add(roleName);
+      }
+      return String.join(", ", roleNames);
    }
 
 }

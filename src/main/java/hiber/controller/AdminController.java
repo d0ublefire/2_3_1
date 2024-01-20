@@ -40,14 +40,14 @@ public class AdminController {
         return "users";
     }
 
-    @GetMapping("/new")
-    public String createUserForm(ModelMap model) {
-        User user = new User();
-        model.addAttribute("users", user);
-        Set<Role> roles = roleService.getRoles();
-        model.addAttribute("roles", roles);
-        return "userCreate";
-    }
+//    @GetMapping("/new")
+//    public String createUserForm(ModelMap model) {
+//        User user = new User();
+//        model.addAttribute("users", user);
+//        Set<Role> roles = roleService.getRoles();
+//        model.addAttribute("roles", roles);
+//        return "userCreate";
+//    }
 
     @PostMapping("/userCreate")
     public String addUser(@ModelAttribute("user") User user, @RequestParam(value = "role", required = false) String[] roles) {
@@ -59,19 +59,19 @@ public class AdminController {
         return "redirect:/users";
     }
 
-    @GetMapping("/removeUser")
+    @PostMapping("/removeUser")
     public String removeUser(@RequestParam("id") Long id) {
         userService.deleteUserById(id);
         return "redirect:/users";
     }
 
-    @GetMapping("/updateUser")
-    public String getEditUserForm(Model model, @RequestParam("id") Long id) {
-        model.addAttribute("users", userService.findUserById(id));
-        Set<Role> roles = roleService.getRoles();
-        model.addAttribute("roles", roles);
-        return "userUpdate";
-    }
+//    @GetMapping("/updateUser/{id}")
+//    public String getEditUserForm(Model model, @RequestParam("id") Long id) {
+//        model.addAttribute("users", userService.findUserById(id));
+//        Set<Role> roles = roleService.getRoles();
+//        model.addAttribute("roles", roles);
+//        return "userUpdate";
+//    }
 
     @PostMapping("/updateUser")
     public String updateUser(@ModelAttribute("user") User user, @RequestParam(value = "role", required = false) String[] roles) {
