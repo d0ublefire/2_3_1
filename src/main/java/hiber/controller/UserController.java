@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 
-@Controller
+@RestController
 public class UserController {
     private final UserService userService;
 

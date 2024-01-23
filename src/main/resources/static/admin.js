@@ -1,4 +1,4 @@
-const URL = 'http://localhost:8080/api/admin/showAccount/';
+const URL = 'http://localhost:8080/showAccount/';
 const navbarAdmin = document.getElementById('navbarAdmin');
 const tableUserAdmin = document.getElementById('tableAdmin');
 
@@ -14,12 +14,11 @@ function getCurrentAdmin() {
             <td>${userAdmin.id}</td>
             <td>${userAdmin.username}</td>
             <td>${userAdmin.lastname}</td>
-            <td>${userAdmin.age}</td>
-            <td>${userAdmin.email}</td>
+            <td>${userAdmin.firstname}</td>
             <td>${rolesStringAdmin}</td>
             </tr>`;
             tableUserAdmin.innerHTML = data;
-            navbarAdmin.innerHTML = `<b><span>${userAdmin.email}</span></b>
+            navbarAdmin.innerHTML = `<b><span>${userAdmin.username}</span></b>
                              <span>with roles:</span>
                              <span>${rolesStringAdmin}</span>`;
         });
@@ -37,7 +36,7 @@ function rolesToStringForAdmin(roles) {
     return rolesString;
 }
 async function getUserById(id) {
-    let response = await fetch("http://localhost:8080/api/admin/users/" + id);
+    let response = await fetch("http://localhost:8080/users" + id);
     return await response.json();
 }
 
@@ -47,8 +46,7 @@ async function open_fill_modal(form, modal, id) {
     form.id.value = user.id;
     form.username.value = user.username;
     form.lastname.value = user.lastname;
-    form.age.value = user.age;
-    form.email.value = user.email;
+    form.firstname.value = user.firstname;
     form.password.value = user.password;
     form.roles.value = user.roles;
 }

@@ -1,4 +1,4 @@
-const URLTableUsers = 'http://localhost:8080/api/admin/users/';
+const URLTableUsers = 'http://localhost:8080/users/';
 
 getAllUsers();
 
@@ -21,8 +21,7 @@ function getAllUsers() {
                         <td>${user.id}</td>
                         <td>${user.username}</td>
                         <td>${user.lastname}</td>
-                        <td>${user.age}</td>
-                        <td>${user.email}</td>
+                        <td>${user.firstname}</td>
                         <td>${rolesString}</td>
 
 

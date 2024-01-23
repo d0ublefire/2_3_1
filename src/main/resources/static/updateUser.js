@@ -1,7 +1,7 @@
 let formEdit = document.forms["formEdit"];
 editUser();
 
-const URLEdit = "http://localhost:8080/api/admin/users/";
+const URLEdit = "http://localhost:8080/users/";
 
 async function editModal(id) {
     const modalEdit = new bootstrap.Modal(document.querySelector('#editModal'));
@@ -45,7 +45,7 @@ function loadRolesForEdit() {
     let selectEdit = document.getElementById("edit-roles");
     selectEdit.innerHTML = "";
 
-    fetch("http://localhost:8080/api/admin/roles")
+    fetch("http://localhost:8080/roles")
         .then(res => res.json())
         .then(data => {
             data.forEach(role => {
