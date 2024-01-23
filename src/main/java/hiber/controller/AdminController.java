@@ -8,16 +8,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.List;
 import java.util.Set;
 
-@Controller
+@RestController
 //@RequiredArgsConstructor
 public class AdminController {
     private final UserService userService;
@@ -59,7 +56,7 @@ public class AdminController {
         return "redirect:/users";
     }
 
-    @PostMapping("/removeUser")
+    @DeleteMapping("/removeUser")
     public String removeUser(@RequestParam("id") Long id) {
         userService.deleteUserById(id);
         return "redirect:/users";
