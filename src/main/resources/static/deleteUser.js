@@ -1,48 +1,32 @@
-let formDelete = document.forms["formDelete"]
-deleteUser();
+'use strict';
+
+let deleteForm = document.forms["formDelete"]
 
 async function deleteModal(id) {
-    const modalDelete = new bootstrap.Modal(document.querySelector('#deleteModal'));
-    await open_fill_modal(formDelete, modalDelete, id);
-    loadRolesForDelete();
+    const modal = new bootstrap.Modal(document.querySelector('#delete'));
+    await openAndFillInTheModal(deleteForm, modal, id);
+    switch (deleteForm.roles.value) {
+        case '1':
+            deleteForm.roles.value = 'ADMIN';
+            break;
+        case '2':
+            deleteForm.roles.value = 'USER';
+            break;
+    }
+    deleteUser()
 }
 
 function deleteUser() {
-    formDelete.addEventListener("submit", ev => {
+    deleteForm.addEventListener("submit", ev => {
         ev.preventDefault();
-        fetch("http://localhost:8080/users/" + formDelete.id.value, {
+        fetch("adminApi/user/" + deleteForm.id.value, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json'
             }
         }).then(() => {
-            $('#deleteClose').click();
-            getAllUsers();
+            $('#closeDelete').click();
+            getTableUser();
         });
     });
 }
-function loadRolesForDelete() {
-    let selectDelete = document.getElementById("delete-roles");
-    selectDelete.innerHTML = "";
-
-    fetch("http://localhost:8080/roles")
-        .then(res => res.json())
-        .then(data => {
-            data.forEach(role => {
-                let option = document.createElement("option");
-                option.value = role.id;
-                option.text = role.name.toString().replace('ROLE_', '');
-                selectDelete.appendChild(option);
-            });
-        })
-        .catch(error => console.error(error));
-}
-
-window.addEventListener("load", loadRolesForDelete);
-
-
-
-
-
-
-

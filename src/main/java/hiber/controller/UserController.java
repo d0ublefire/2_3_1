@@ -1,32 +1,28 @@
 package hiber.controller;
 
+
 import hiber.model.User;
 import hiber.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 
 import java.security.Principal;
 
 @RestController
+@RequestMapping("/userApi")
 public class UserController {
     private final UserService userService;
 
-    @Autowired
     public UserController(UserService userService) {
         this.userService = userService;
     }
 
-
-    @GetMapping("/user")
-    public String userPage(Model model, Principal principal) {
-        Long userId = userService.getUserIdByEmail(principal.getName());
-        User user = userService.findUserById(userId);
-//        User user = userService.findByUserEmail(principal.getName());
-        model.addAttribute("user", user);
-        return "user";
+    @GetMapping("/auth")
+    public ResponseEntity<User> getUser(Principal principal) {
+        User user = userService.findUserById(userService.getUserIdByEmail(principal.getName()));
+        return ResponseEntity.ok(user);
     }
 }
-
-

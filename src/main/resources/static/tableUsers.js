@@ -1,61 +1,45 @@
-const URLTableUsers = 'http://localhost:8080/users/';
+'use strict';
+const tbody = $('#AllUsers');
+getTableUser();
 
-getAllUsers();
+let roles3 = [];
+function roles2(roles3) {
+    let roles = roles3[0].name.replace('ROLE_', '');
+    if(roles3.length === 2) {
+        roles = roles + ", " + roles3[1].name.replace('ROLE_', '');
+    }
+    return roles
+}
+function getTableUser() {
+    tbody.empty();
+    fetch("adminApi/users")
+        .then(res => res.json())
+        .then(js => {
+            console.log(js);
+            js.forEach(user => {
 
-function getAllUsers() {
-    fetch(URLTableUsers)
-        .then(function (response) {
-            return response.json();
-        })
-        .then(function (users) {
-            let dataOfUsers = '';
-            let rolesString = '';
-
-            const tableUsers = document.getElementById('tableUsers');
-
-            for (let user of users) {
-
-                rolesString = rolesToString(user.roles);
-
-                dataOfUsers += `<tr>
-                        <td>${user.id}</td>
-                        <td>${user.username}</td>
-                        <td>${user.lastname}</td>
-                        <td>${user.firstname}</td>
-                        <td>${rolesString}</td>
-
-
+                // const roles = user.roles.map(role => role.role).join(',');
+                const users = $(
+                    `<tr>
+                        <td class="pt-3" id="userID">${user.id}</td>
+                        <td class="pt-3" >${user.username}</td>
+                        <td class="pt-3" >${user.firstName}</td>
+                        <td class="pt-3" >${user.lastName}</td>
+                        <td class="pt-3" >${roles2(user.roles)}</td>
+                        
                         <td>
-                          <button type="button"
-                          class="btn btn-info"
-                          data-bs-toggle="modal"
-                          data-bs-target="#editModal"
-                          onclick="editModal(${user.id})">
-                                Edit
+                            <button type="button" class="btn btn-info" data-toggle="modal" data-target="#edit" onclick="editModal(${user.id})">
+                            Edit
                             </button>
                         </td>
-
-
                         <td>
-                            <button type="button" 
-                            class="btn btn-danger" 
-                            data-bs-toggle="modal" 
-                            data-target="#deleteModal" 
-                            onclick="deleteModal(${user.id})">
+                            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#delete" onclick="deleteModal(${user.id})">
                                 Delete
                             </button>
                         </td>
-                    </tr>`;
-            }
-            tableUsers.innerHTML = dataOfUsers;
+                    </tr>`
+                );
+                tbody.append(users);
+            });
         })
-}
-
-function rolesToString(roles) {
-    let rolesString = '';
-    for (const element of roles) {
-        rolesString += (element.name.toString().replace('ROLE_', '') + ', ');
-    }
-    rolesString = rolesString.substring(0, rolesString.length - 2);
-    return rolesString;
 }
